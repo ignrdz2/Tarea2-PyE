@@ -1,16 +1,44 @@
-# This is a sample Python script.
-
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+import time
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
-# Press the green button in the gutter to run the script.
+# Parametros para el generador
+a = 1664525
+c = 1013904223
+m = 2**32
+
+
+def semilla():
+    return time.time_ns() % m
+
+
+def lcg(semilla, n):
+    numeros = []
+    x = semilla
+    for _ in range(n):
+        x = (a * x + c) % m
+        numeros.append(x / m)
+    return numeros
+
+
+def graficar_histograma(muestra):
+    plt.figure(figsize=(8, 5))
+    sns.histplot(muestra, kde=True, bins=10, color='skyblue', edgecolor='black')
+    plt.title("Muestra de 100 variables uniformes en [0,1]")
+    plt.xlabel("Valor")
+    plt.ylabel("Frecuencia")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+
+def main():
+    seed = semilla()
+    muestra = lcg(seed, 100)
+    print(muestra)
+    graficar_histograma(muestra)
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
